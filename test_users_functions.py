@@ -11,13 +11,19 @@ import pytest
 
 @pytest.fixture
 def users():
-    pass
+    with open("users.csv") as f:
+        users = list(csv.DictReader(f, delimiter=";"))
+    return users
 
 
 @pytest.fixture
 def workers(users):
-    pass
+    """
+    Берем только работников из списка пользователей
+    """
+    return [user for user in users if user["status"] == "worker"]
 
 
 def test_workers_are_adults_v2(workers):
-    pass
+    for worker in workers:
+        assert int(worker["age"]) >= 18, f"Работник {worker['name']} младше 18"
